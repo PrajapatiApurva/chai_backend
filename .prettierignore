@@ -1,0 +1,27 @@
+# Ignore directories
+node_modules/
+
+# Ignore specific files
+package-lock.json
+yarn.lock
+
+# Ignore build output
+./dist
+dist/
+build/
+
+# Ignore logs
+*.log
+
+# Ignore coverage reports
+coverage/
+
+# Ignore hidden files and directories
+.*
+*.env
+.env
+.env.*
+
+# Ignore configuration files
+.eslint*
+.prettier*
