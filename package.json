@@ -3,7 +3,9 @@
   "version": "1.0.0",
   "description": "Learning phase of Backend-Dev",
   "main": "index.js",
+  "type": "module",
   "scripts": {
+    "dev": "nodemon src/index.js",
     "test": "echo \"Error: no test specified\" && exit 1"
   },
   "keywords": [
@@ -12,5 +14,8 @@
     "Progress"
   ],
   "author": "Apurva Prajapati",
-  "license": "ISC"
+  "license": "ISC",
+  "devDependencies": {
+    "nodemon": "^3.1.4"
+  }
 }
