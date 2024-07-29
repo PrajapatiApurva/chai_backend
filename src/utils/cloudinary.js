@@ -23,7 +23,7 @@ const fileUploadOnCloudinary = async (localFilePath) => {
       response
     );
 
-    return response; //it's better if we return only "response.url" but since I am in my learning phase so I wanted to know what's inside the response.
+    return response.url; //it's better if we return only "response.url" but since I am in my learning phase so I wanted to know what's inside the response.
   } catch (error) {
     fs.unlinkSync(localFilePath); // remove the locally saved temporary file as the upload operation got failed
     console.log(error);

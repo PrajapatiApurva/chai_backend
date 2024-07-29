@@ -29,7 +29,7 @@ const userSchema = new Schema(
             type: String, // Cloudinary url
             required: true
         },
-        avatar: {
+        coverImage: {
             type: String, // Cloudinary url
         },
         watchHistory: [
@@ -55,10 +55,9 @@ userSchema.pre("save", async function (next){
     
     this.password = await bcrypt.hash(this.password, 18);
     next();
-}) // don't use arrow function in callback, because arrow function doesn't give you this functionality.
+}) // don't use arrow function in callback, because arrow function doesn't give you "this" functionality.
 
-userSchema.methods.isPasswordCorrect = 
-async function(password){
+userSchema.methods.isPasswordCorrect = async function(password){
     return await bcrypt.compare(password, this.password)
 }
 
