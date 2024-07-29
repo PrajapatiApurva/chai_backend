@@ -17,13 +17,12 @@ const fileUploadOnCloudinary = async (localFilePath) => {
     const response = await cloudinary.uploader.upload(localFilePath, {
       resource_type: "auto",
     });
-    // File uploaded successfully
-    console.log(
-      "File has been uploaded successfully, and the response is:\n",
-      response
-    );
 
-    return response.url; //it's better if we return only "response.url" but since I am in my learning phase so I wanted to know what's inside the response.
+    // File uploaded successfully
+    // remove file from local Directory
+    fs.unlinkSync(localFilePath);
+
+    return response; //it's better if we return only "response.url" but since I am in my learning phase so I wanted to know what's inside the response.
   } catch (error) {
     fs.unlinkSync(localFilePath); // remove the locally saved temporary file as the upload operation got failed
     console.log(error);
