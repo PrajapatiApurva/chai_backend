@@ -28,7 +28,7 @@ const registerUser = asyncHandler(async (req, res) => {
     throw new ApiError(400, "All fields are required...");
   }
 
-  const existedUser = User.findOne({
+  const existedUser = await User.findOne({
     $or: [{ username }, { email }],
   });
 
@@ -39,10 +39,22 @@ const registerUser = asyncHandler(async (req, res) => {
   // req.files is given access by Multer which we have used in "user.routes"
   // req.files?.avatar[0]?.path  --> first property of avatar is an object if exists, which has various data but path is the one which we will use.
   const avatarLocalPath = req.files?.avatar[0]?.path;
-  const coverImageLocalPath = req.files?.coverImage[0]?.path;
+  // const coverImageLocalPath = req.files?.coverImage[0]?.path;
+  // it is not guaranteed that you will always have array of coverImage as it is not a required Field..
+  // So this line can cause Error of -->TypeError: Cannot read properties of undefined (reading '0')
 
-  const fileInfo = req.files;
-  console.log(avatarInfo); // will delete it later
+  // Instead, use this conventional lines:
+  let coverImageLocalPath;
+  if (
+    req.files &&
+    Array.isArray(req.files.coverImage) &&
+    req.files.coverImage.length > 0
+  ) {
+    coverImageLocalPath = req.files.coverImage[0].path;
+  }
+
+  // const fileInfo = req.files;
+  // console.log(fileInfo); // will delete it later
 
   // Here in our project avatar file is required
   if (!avatarLocalPath) {
@@ -60,24 +72,26 @@ const registerUser = asyncHandler(async (req, res) => {
     username: username.toLowerCase(),
     email,
     fullname,
-    avatar,
-    coverImage:  coverImage?coverImage:"",
-    password
-  }
+    avatar: avatar.url,
+    coverImage: coverImage?.url || "",
+    password,
+  };
   const user = await User.create(userObj);
 
   const craetedUser = await User.findById(user._id).select(
     "-password -refreshToken"
   );
 
-  if(!craetedUser){
-    throw new ApiError(500, "Something went wrong while registering the User...")
+  if (!craetedUser) {
+    throw new ApiError(
+      500,
+      "Something went wrong while registering the User..."
+    );
   }
 
-  return res.status(201).json(
-    new ApiResponse(200, craetedUser, "User registerd successfully!!!")
-  )
-
+  return res
+    .status(201)
+    .json(new ApiResponse(200, craetedUser, "User registerd successfully!!!"));
 });
 
 export { registerUser };
